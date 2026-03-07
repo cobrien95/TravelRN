@@ -1,0 +1,180 @@
+// TravelRN — Prisma Schema
+// PHI-less architecture: No patient health data.
+// PII fields are AES-256-GCM encrypted at the application layer.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// Nurse Profile — Core user entity
+// ─────────────────────────────────────────────
+
+model NurseProfile {
+  id    String @id @default(uuid())
+  email String @unique
+
+  firstName String
+  lastName  String
+
+  // --- Encrypted PII (AES-256-GCM, stored as Base64) ---
+  ssnEncrypted         String? // Social Security Number
+  dateOfBirthEncrypted String? // Date of Birth
+  phoneEncrypted       String? // Phone number
+  taxHomeEncrypted     String? // Permanent tax home address
+
+  // --- Non-PII Preferences ---
+  role            Role      @default(NURSE)
+  specialties     String[] // e.g. ["ICU", "Med-Surg", "ER"]
+  shiftPreference ShiftType?
+  minNetWeeklyPay Float?
+  preferredStates String[] // e.g. ["CO", "TX", "CA"]
+
+  // --- Relations ---
+  licenses       License[]
+  certifications Certification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("nurse_profiles")
+}
+
+// ─────────────────────────────────────────────
+// Licenses (RN, LPN, Compact)
+// ─────────────────────────────────────────────
+
+model License {
+  id      String       @id @default(uuid())
+  nurseId String
+  nurse   NurseProfile @relation(fields: [nurseId], references: [id], onDelete: Cascade)
+
+  state         String // e.g. "CO" or "COMPACT"
+  licenseNumber String
+  licenseType   LicenseType
+  expiresAt     DateTime
+  verified      Boolean   @default(false)
+  verifiedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@map("licenses")
+}
+
+// ─────────────────────────────────────────────
+// Certifications (BLS, ACLS, PALS, etc.)
+// ─────────────────────────────────────────────
+
+model Certification {
+  id      String       @id @default(uuid())
+  nurseId String
+  nurse   NurseProfile @relation(fields: [nurseId], references: [id], onDelete: Cascade)
+
+  name        String // e.g. "BLS", "ACLS", "PALS"
+  issuingBody String
+  expiresAt   DateTime
+  verified    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@map("certifications")
+}
+
+// ─────────────────────────────────────────────
+// Job Requisitions (VMS/ATS data)
+// ─────────────────────────────────────────────
+
+model JobRequisition {
+  id         String @id @default(uuid())
+  externalId String @unique // VMS/ATS reference ID
+  source     String // "merge_dev" | "vms_park"
+
+  title        String // e.g. "Med-Surg RN"
+  specialty    String
+  facilityName String
+  city         String
+  state        String
+  zipCode      String
+
+  shiftType      ShiftType
+  contractWeeks  Int       @default(13)
+  grossWeeklyPay Float
+  hoursPerWeek   Float     @default(36)
+  startDate      DateTime?
+
+  requirements String[] // e.g. ["BLS", "ACLS", "2yr exp"]
+  description  String?
+  isActive     Boolean  @default(true)
+
+  // --- Relations ---
+  housingMatches HousingMatch[]
+
+  fetchedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("job_requisitions")
+}
+
+// ─────────────────────────────────────────────
+// Housing Matches (Rental data)
+// ─────────────────────────────────────────────
+
+model HousingMatch {
+  id               String          @id @default(uuid())
+  jobRequisitionId String?
+  jobRequisition   JobRequisition? @relation(fields: [jobRequisitionId], references: [id], onDelete: SetNull)
+
+  source     String // "rentcast" | "apify"
+  externalId String?
+
+  title   String
+  address String
+  city    String
+  state   String
+  zipCode String
+
+  monthlyRent Float
+  weeklyRent  Float? // Computed: monthlyRent / 4.33
+  bedrooms    Int?
+  bathrooms   Float?
+
+  isFurnished  Boolean @default(false)
+  isPetFriendly Boolean @default(false)
+
+  listingUrl    String?
+  imageUrl      String?
+  availableFrom DateTime?
+
+  fetchedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@map("housing_matches")
+}
+
+// ─────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────
+
+enum Role {
+  NURSE
+  ADMIN
+  SYSTEM
+}
+
+enum ShiftType {
+  DAY
+  NIGHT
+  SWING
+}
+
+enum LicenseType {
+  RN
+  LPN
+  COMPACT
+}
