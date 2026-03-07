@@ -83,3 +83,82 @@ export async function fetchCredentialById(id: string): Promise<CredentialDTO | n
     await new Promise((resolve) => setTimeout(resolve, 50));
     return MOCK_CREDENTIALS.find((c) => c.id === id) ?? null;
 }
+
+// ─── AI Tool Verification Types & Mocks ─────────────────────
+
+export interface CredentialToVerify {
+    type: "license" | "certification";
+    identifier: string; // license number or cert name
+    state?: string;
+    issuingBody?: string;
+}
+
+export interface CredentialVerificationRequest {
+    nurseId: string;
+    firstName: string;
+    lastName: string;
+    credentials: CredentialToVerify[];
+}
+
+export interface SingleCredentialResult {
+    identifier: string;
+    type: "license" | "certification";
+    verified: boolean;
+    status: "ACTIVE" | "EXPIRED" | "NOT_FOUND" | "PENDING";
+    expirationDate?: string;
+    notes?: string;
+}
+
+export interface CredentialVerificationResult {
+    nurseId: string;
+    verifiedAt: string;
+    allValid: boolean;
+    results: SingleCredentialResult[];
+}
+
+export async function verifyCredentials(
+    request: CredentialVerificationRequest
+): Promise<CredentialVerificationResult> {
+    // Mock response for AI agent
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
+    const results: SingleCredentialResult[] = request.credentials.map((c) => {
+        // Pretend everything matches and is active
+        return {
+            identifier: c.identifier,
+            type: c.type,
+            verified: true,
+            status: "ACTIVE",
+            expirationDate: "2028-01-01",
+        };
+    });
+
+    return {
+        nurseId: request.nurseId,
+        verifiedAt: new Date().toISOString(),
+        allValid: true,
+        results,
+    };
+}
+
+export async function canPracticeInState(
+    request: CredentialVerificationRequest,
+    targetState: string
+): Promise<{ allowed: boolean; reason: string }> {
+    // Mock response for AI agent
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    const license = request.credentials.find((c) => c.type === "license");
+    if (!license) {
+        return { allowed: false, reason: "No active RN license provided." };
+    }
+
+    if (license.state === targetState) {
+        return { allowed: true, reason: `Active license in ${targetState}.` };
+    }
+
+    return {
+        allowed: true,
+        reason: `License in ${license.state} has compact privileges allowing practice in ${targetState}.`,
+    };
+}
