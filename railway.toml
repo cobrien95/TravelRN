@@ -1,8 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm install --include=dev && 
-                npx prisma generate --schema=apps/server/prisma/schema.prisma && 
-                npm run build --workspace=apps/server"
+buildCommand = "npm install --include=dev && npx prisma generate --schema=apps/server/prisma/schema.prisma && npm run build --workspace=apps/server"
 
 [deploy]
 startCommand = "npm run start --workspace=apps/server"
