@@ -60,8 +60,8 @@ app.get("/api/v1", (_req, res) => {
 });
 
 // ─── Start Server ────────────────────────────────
-app.listen(PORT, () => {
-    console.log(`\n🩺 TravelRN API running on http://localhost:${PORT}`);
+app.listen(Number(PORT), "0.0.0.0", () => {
+    console.log(`\n🩺 TravelRN API running on port ${PORT}`);
     console.log(`   Health: http://localhost:${PORT}/health`);
     console.log(`   Docs:   http://localhost:${PORT}/api/v1\n`);
 });
