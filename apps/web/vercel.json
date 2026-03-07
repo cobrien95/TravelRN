@@ -1,3 +1,4 @@
 {
-    "installCommand": "npm i -g pnpm && pnpm install"
+    "installCommand": "npm i -g pnpm && pnpm install",
+    "framework": "nextjs"
 }
