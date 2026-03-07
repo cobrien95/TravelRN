@@ -5,6 +5,9 @@ import Sidebar from "./components/Sidebar";
 import DashboardHome from "./components/DashboardHome";
 import JobsView from "./components/JobsView";
 import CredentialsView from "./components/CredentialsView";
+import HousingView from "./components/HousingView";
+import TaxCalculatorView from "./components/TaxCalculatorView";
+import ContractReviewView from "./components/ContractReviewView";
 
 export default function Home() {
   const [activeView, setActiveView] = useState("home");
@@ -18,13 +21,11 @@ export default function Home() {
       case "credentials":
         return <CredentialsView />;
       case "housing":
-        return (
-          <div className="coming-soon">
-            <span className="coming-soon-icon">🏠</span>
-            <h2>Housing Search</h2>
-            <p>Coming soon — find furnished rentals near your contract.</p>
-          </div>
-        );
+        return <HousingView />;
+      case "tax":
+        return <TaxCalculatorView />;
+      case "contracts":
+        return <ContractReviewView />;
       default:
         return <DashboardHome onNavigate={setActiveView} />;
     }

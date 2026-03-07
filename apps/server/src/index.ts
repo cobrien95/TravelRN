@@ -39,22 +39,34 @@ app.get("/health", async (_req, res) => {
 // ─── Routes ──────────────────────────────────────
 import agentRoutes from "./modules/agent.routes.js";
 import jobsRoutes from "./modules/jobs.routes.js";
+import hospitalsRoutes from "./modules/hospitals.routes.js";
+import housingRoutes from "./modules/housing.routes.js";
+import credentialsRoutes from "./modules/credentials.routes.js";
+import taxRoutes from "./modules/tax.routes.js";
 
 app.use("/api/v1/agent", agentRoutes);
 app.use("/api/v1/jobs", jobsRoutes);
+app.use("/api/v1/hospitals", hospitalsRoutes);
+app.use("/api/v1/housing", housingRoutes);
+app.use("/api/v1/credentials", credentialsRoutes);
+app.use("/api/v1/tax", taxRoutes);
 
 app.get("/api/v1", (_req, res) => {
     res.json({
         message: "TravelRN API v1",
-        version: "0.1.0",
+        version: "0.2.0",
         endpoints: {
             health: "/health",
             agent: "/api/v1/agent/chat (POST)",
             jobs: "/api/v1/jobs (GET)",
             jobsSearch: "/api/v1/jobs/search (GET)",
             jobById: "/api/v1/jobs/:id (GET)",
-            nurses: "/api/v1/nurses (coming soon)",
-            housing: "/api/v1/housing (coming soon)",
+            hospitals: "/api/v1/hospitals (GET)",
+            hospitalById: "/api/v1/hospitals/:id (GET)",
+            housing: "/api/v1/housing (GET)",
+            housingSearch: "/api/v1/housing?city=Denver (GET)",
+            credentials: "/api/v1/credentials (GET)",
+            taxCalculator: "/api/v1/tax/calculate (POST)",
         },
     });
 });

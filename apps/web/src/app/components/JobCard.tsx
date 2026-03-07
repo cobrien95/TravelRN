@@ -8,6 +8,10 @@ export interface Job {
     title: string;
     specialty: string;
     facilityName: string;
+    facilityRating?: number;
+    patientRatio?: string;
+    magnetStatus?: boolean;
+    emrSystem?: string;
     city: string;
     state: string;
     zipCode: string;
@@ -49,7 +53,15 @@ export default function JobCard({ job, index = 0 }: JobCardProps) {
             <div className="job-card-header">
                 <div>
                     <h3 className="job-card-title">{job.title}</h3>
-                    <p className="job-card-facility">{job.facilityName}</p>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginTop: "4px", marginBottom: "8px" }}>
+                        <span className="job-card-facility" style={{ margin: 0 }}>{job.facilityName}</span>
+                        {job.facilityRating && (
+                            <span className="rating-stars">★ {job.facilityRating}</span>
+                        )}
+                        {job.magnetStatus && (
+                            <span className="magnet-badge">Magnet</span>
+                        )}
+                    </div>
                 </div>
                 <div className="job-card-pay">
                     <span className="job-card-pay-amount">
@@ -72,6 +84,8 @@ export default function JobCard({ job, index = 0 }: JobCardProps) {
                 </span>
                 <span className="job-card-tag">📅 {job.contractWeeks}wk</span>
                 <span className="job-card-tag">⏱️ {job.hoursPerWeek}hr/wk</span>
+                {job.patientRatio && <span className="job-card-tag">👥 {job.patientRatio}</span>}
+                {job.emrSystem && <span className="job-card-tag">💻 {job.emrSystem}</span>}
             </div>
 
             <p className="job-card-description">{job.description}</p>

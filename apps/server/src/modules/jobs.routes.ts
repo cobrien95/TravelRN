@@ -12,7 +12,6 @@ import {
     fetchJobById,
     searchJobs,
 } from "../services/jobs.service.js";
-import type { ShiftType } from "@prisma/client";
 
 const router = Router();
 
@@ -41,7 +40,7 @@ router.get("/search", async (req, res) => {
         const jobs = await searchJobs({
             specialty: specialty as string | undefined,
             state: state as string | undefined,
-            shiftType: shiftType as ShiftType | undefined,
+            shiftType: shiftType as string | undefined,
             minWeeklyPay: minWeeklyPay ? Number(minWeeklyPay) : undefined,
         });
 
