@@ -2,17 +2,14 @@
     "name": "travelrn",
     "version": "0.1.0",
     "private": true,
-    "workspaces": [
-        "apps/*"
-    ],
     "scripts": {
-        "dev:web": "npm run dev --workspace=apps/web",
-        "dev:server": "npm run dev --workspace=apps/server",
-        "build:web": "npm run build --workspace=apps/web",
-        "build:server": "npm run build --workspace=apps/server",
-        "db:generate": "npm run db:generate --workspace=apps/server",
-        "db:migrate": "npm run db:migrate --workspace=apps/server",
-        "db:push": "npm run db:push --workspace=apps/server",
-        "db:studio": "npm run db:studio --workspace=apps/server"
+        "dev:web": "pnpm run dev --workspace=apps/web",
+        "dev:server": "pnpm run dev --workspace=apps/server",
+        "build:web": "pnpm run build --workspace=apps/web",
+        "build:server": "pnpm run build --workspace=apps/server",
+        "db:generate": "pnpm run db:generate --workspace=apps/server",
+        "db:migrate": "pnpm run db:migrate --workspace=apps/server",
+        "db:push": "pnpm run db:push --workspace=apps/server",
+        "db:studio": "pnpm run db:studio --workspace=apps/server"
     }
 }

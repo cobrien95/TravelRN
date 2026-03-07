@@ -1,6 +1,5 @@
 [build]
-buildCommand = "npm install --include=dev && npx prisma generate --schema=apps/server/prisma/schema.prisma && npm run build --workspace=apps/server"
+buildCommand = "npm i -g pnpm && pnpm install && pnpm --filter @travelrn/server exec prisma generate && pnpm --filter @travelrn/server build"
 
 [deploy]
-startCommand = "npm run start --workspace=apps/server"
-restartPolicyType = "ON_FAILURE"
+startCommand = "pnpm --filter @travelrn/server start"
