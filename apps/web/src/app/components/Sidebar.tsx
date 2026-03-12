@@ -14,6 +14,7 @@ const NAV_ITEMS = [
     { id: "housing", label: "Housing", icon: "🏠" },
     { id: "tax", label: "Tax & Stipend", icon: "💰" },
     { id: "contracts", label: "Contract Review", icon: "📄" },
+    { id: "social", label: "Social Events", icon: "🥂" },
 ];
 
 export default function Sidebar({ activeView, onNavigate }: SidebarProps) {

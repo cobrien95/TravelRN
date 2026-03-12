@@ -8,6 +8,7 @@ import CredentialsView from "./components/CredentialsView";
 import HousingView from "./components/HousingView";
 import TaxCalculatorView from "./components/TaxCalculatorView";
 import ContractReviewView from "./components/ContractReviewView";
+import SocialView from "./components/SocialView";
 
 export default function Home() {
   const [activeView, setActiveView] = useState("home");
@@ -26,6 +27,8 @@ export default function Home() {
         return <TaxCalculatorView />;
       case "contracts":
         return <ContractReviewView />;
+      case "social":
+        return <SocialView />;
       default:
         return <DashboardHome onNavigate={setActiveView} />;
     }
