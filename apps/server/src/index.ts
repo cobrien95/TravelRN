@@ -43,6 +43,7 @@ import hospitalsRoutes from "./modules/hospitals.routes.js";
 import housingRoutes from "./modules/housing.routes.js";
 import credentialsRoutes from "./modules/credentials.routes.js";
 import taxRoutes from "./modules/tax.routes.js";
+import eventsRoutes from "./modules/events.routes.js";
 
 app.use("/api/v1/agent", agentRoutes);
 app.use("/api/v1/jobs", jobsRoutes);
@@ -50,6 +51,7 @@ app.use("/api/v1/hospitals", hospitalsRoutes);
 app.use("/api/v1/housing", housingRoutes);
 app.use("/api/v1/credentials", credentialsRoutes);
 app.use("/api/v1/tax", taxRoutes);
+app.use("/api/v1/events", eventsRoutes);
 
 app.get("/api/v1", (_req, res) => {
     res.json({
@@ -67,6 +69,7 @@ app.get("/api/v1", (_req, res) => {
             housingSearch: "/api/v1/housing?city=Denver (GET)",
             credentials: "/api/v1/credentials (GET)",
             taxCalculator: "/api/v1/tax/calculate (POST)",
+            events: "/api/v1/events?location=Denver (GET)",
         },
     });
 });
